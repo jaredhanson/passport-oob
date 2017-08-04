@@ -1,7 +1,7 @@
 {
-  "name": "passport-mfa-oob",
+  "name": "passport-oob",
   "version": "0.0.0",
-  "description": "Out-of-band multi-factor authentication strategy for Passport.",
+  "description": "Out-of-band authentication strategy for Passport.",
   "keywords": [
     "passport",
     "oob",
