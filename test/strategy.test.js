@@ -128,6 +128,60 @@ describe('Strategy', function() {
     });
   }); // handling an approved request with credentials in query
   
+  describe('handling an approved request with credentials in body, using request', function() {
+    var gateway = new Gateway();
+    var channel = {
+      verify: function(authnr, ticket, cb) {
+        if (authnr.id !== 'dev_324598') { return done(new Error('incorrect authnr argument')); }
+        if (ticket !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect ticket argument')); }
+        return cb(null, true);
+      }
+    }
+    gateway.use('sms', channel);
+    
+    var strategy = new Strategy({ passReqToCallback: true }, gateway, function(req, ticket, done) {
+      if (req.headers['host'] !== 'acme.example.com') { return done(new Error('incorrect req argument')); }
+      if (ticket !== '2YotnFZFEjr1zCsicMWpAA') { return done(new Error('incorrect ticket argument')); }
+      
+      var user = {
+        id: '501',
+        displayName: 'John Doe'
+      };
+      var authnr = {
+        id: 'dev_324598',
+        name: "John's Phone",
+        channel: 'sms'
+      };
+      return done(null, user, authnr);
+    });
+    
+    var user, info;
+    
+    before(function(done) {
+      chai.passport.use(strategy)
+        .success(function(u, i) {
+          user = u;
+          info = i;
+          done();
+        })
+        .req(function(req) {
+          req.headers['host'] = 'acme.example.com';
+          req.body = { ticket: '2YotnFZFEjr1zCsicMWpAA' };
+        })
+        .authenticate();
+    });
+    
+    it('should supply user', function() {
+      expect(user).to.be.an.object;
+      expect(user.id).to.equal('501');
+    });
+    
+    it('should supply info', function() {
+      expect(info).to.be.an.object;
+      expect(info.method).to.equal('oob');
+    });
+  }); // handling an approved request with credentials in body, using request
+  
   describe('handling a denied request', function() {
     var gateway = new Gateway();
     var channel = {
