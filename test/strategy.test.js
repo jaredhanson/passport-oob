@@ -12,7 +12,13 @@ describe('Strategy', function() {
     expect(strategy.name).to.equal('oob');
   });
   
-  it('should throw if constructed without a gatway', function() {
+  it('should throw if constructed with no arguments', function() {
+    expect(function() {
+      var s = new Strategy();
+    }).to.throw(TypeError, 'OOBStrategy requires a gateway');
+  });
+  
+  it('should throw if constructed without a gateway', function() {
     expect(function() {
       var s = new Strategy(function(){});
     }).to.throw(TypeError, 'OOBStrategy requires a gateway');
