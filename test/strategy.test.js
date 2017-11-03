@@ -168,8 +168,8 @@ describe('Strategy', function() {
         .authenticate();
     });
     
-    it('should supply info', function() {
-      expect(info).to.be.an.object;
+    it('should not supply info', function() {
+      expect(info).to.be.undefined;
     });
   }); // handling a denied request
   
@@ -288,5 +288,155 @@ describe('Strategy', function() {
       expect(status).to.equal(400);
     });
   }); // handling a request without body
+  
+  describe('encountering an error while fetching user and authenticator', function() {
+    var gateway = new Gateway();
+    var channel = {
+      verify: function(authnr, ticket, cb) {
+        return cb(null, true);
+      }
+    }
+    gateway.use('sms', channel);
+    
+    var strategy = new Strategy(gateway, function(ticket, done) {
+      return done(new Error('something went wrong'));
+    });
+    
+    var err;
+    
+    before(function(done) {
+      chai.passport.use(strategy)
+        .error(function(e) {
+          err = e;
+          done();
+        })
+        .req(function(req) {
+          req.body = { ticket: '2YotnFZFEjr1zCsicMWpAA' };
+        })
+        .authenticate();
+    });
+    
+    it('should error', function() {
+      expect(err).to.be.an.instanceof(Error);
+      expect(err.message).to.equal('something went wrong');
+    });
+  }); // encountering an error while fetching user and authenticator
+  
+  describe('encountering an exception while fetching user and authenticator', function() {
+    var gateway = new Gateway();
+    var channel = {
+      verify: function(authnr, ticket, cb) {
+        return cb(null, true);
+      }
+    }
+    gateway.use('sms', channel);
+    
+    var strategy = new Strategy(gateway, function(ticket, done) {
+      throw new Error('something went horribly wrong');
+    });
+    
+    var err;
+    
+    before(function(done) {
+      chai.passport.use(strategy)
+        .error(function(e) {
+          err = e;
+          done();
+        })
+        .req(function(req) {
+          req.body = { ticket: '2YotnFZFEjr1zCsicMWpAA' };
+        })
+        .authenticate();
+    });
+    
+    it('should error', function() {
+      expect(err).to.be.an.instanceof(Error);
+      expect(err.message).to.equal('something went horribly wrong');
+    });
+  }); // encountering an exception while fetching user and authenticator
+  
+  describe('encountering an error while verifying request', function() {
+    var gateway = new Gateway();
+    var channel = {
+      verify: function(authnr, ticket, cb) {
+        return cb(new Error('failed to verify request'));
+      }
+    }
+    gateway.use('sms', channel);
+    
+    var strategy = new Strategy(gateway, function(ticket, done) {
+      var user = {
+        id: '501',
+        displayName: 'John Doe'
+      };
+      var authnr = {
+        id: 'dev_324598',
+        name: "John's Phone",
+        channel: 'sms'
+      };
+      return done(null, user, authnr);
+    });
+    
+    var err;
+    
+    before(function(done) {
+      chai.passport.use(strategy)
+        .error(function(e) {
+          err = e;
+          done();
+        })
+        .req(function(req) {
+          req.body = { ticket: '2YotnFZFEjr1zCsicMWpAA' };
+        })
+        .authenticate();
+    });
+    
+    it('should error', function() {
+      expect(err).to.be.an.instanceof(Error);
+      expect(err.message).to.equal('failed to verify request');
+    });
+  }); // encountering an error while verifying request
+  
+  describe('failing due to unsupported channel', function() {
+    var gateway = new Gateway();
+    var channel = {
+      verify: function(authnr, ticket, cb) {
+        return cb(null, true);
+      }
+    }
+    gateway.use('sms', channel);
+    
+    var strategy = new Strategy(gateway, function(ticket, done) {
+      var user = {
+        id: '501',
+        displayName: 'John Doe'
+      };
+      var authnr = {
+        id: 'dev_324598',
+        name: "John's Phone",
+        channel: 'foo'
+      };
+      return done(null, user, authnr);
+    });
+    
+    var err;
+    
+    before(function(done) {
+      chai.passport.use(strategy)
+        .error(function(e) {
+          err = e;
+          done();
+        })
+        .req(function(req) {
+          req.body = { ticket: '2YotnFZFEjr1zCsicMWpAA' };
+        })
+        .authenticate();
+    });
+    
+    it('should error', function() {
+      expect(err).to.be.an.instanceof(Error);
+      expect(err.message).to.equal('OOB channel "foo" is not supported');
+    });
+  }); // failing due to unsupported channel
   
 });
