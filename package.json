@@ -17,10 +17,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jaredhanson/passport-mfa-oob.git"
+    "url": "git://github.com/jaredhanson/passport-oob.git"
   },
   "bugs": {
-    "url": "http://github.com/jaredhanson/passport-mfa-oob/issues"
+    "url": "http://github.com/jaredhanson/passport-oob/issues"
   },
   "license": "MIT",
   "licenses": [
