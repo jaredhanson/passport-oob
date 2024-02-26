@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- 
+
+### Removed
+
+- Removed `Gateway` class and associated functionality, which will be moved to
+the higher-level [`@authnomicon/oob`](https://github.com/authnomicon/oob)
+framework.
+
 ## [0.0.2] - 2017-11-03
 ### Fixed
 
