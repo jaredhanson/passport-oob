@@ -8,7 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- 
+- `Strategy` now verifies an `address` and `code`, rather than a `ticket`.  This
+implements the more commonly used form of out-of-band authenticaiton in which a
+user receives a code on a secondary channel (such as SMS) and inputs it into the
+authentication session on the primary channel.  Alternate modes of operation in
+which user input occurs on the secondary channel will be implemented in a
+separate strategy.
 
 ### Removed
 
