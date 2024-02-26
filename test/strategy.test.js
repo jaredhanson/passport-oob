@@ -32,8 +32,7 @@ describe('Strategy', function() {
   });
   */
   
-  it('should do something', function(done) {
-    
+  it('should verify address and code', function(done) {
     chai.passport.use(new Strategy(function(address, code, cb) {
       expect(address).to.equal('+1-201-555-0123');
       expect(code).to.equal('123456');
@@ -46,27 +45,12 @@ describe('Strategy', function() {
         };
       })
       .success(function(user, info) {
-        console.log('SUCCESS...');
-      
-        
         expect(user).to.deep.equal({ id: '248289761001' });
         expect(info).to.be.undefined;
-        /*
-        expect(this.session).to.deep.equal({
-          messages: []
-        });
-        */
         done();
       })
       .error(done)
       .authenticate();
-    
-    
-    /*
-    var strategy = new Strategy(gateway, function(ticket, done) {
-      
-    });
-    */
   });
   
   /*
