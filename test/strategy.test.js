@@ -2,7 +2,6 @@
 
 var chai = require('chai');
 var Strategy = require('../lib/strategy');
-var Gateway = require('../lib/gateway');
 
 
 describe('Strategy', function() {
