@@ -37,7 +37,7 @@
     "make-node": "^0.3.0",
     "mocha": "^2.0.0",
     "chai": "^3.0.0",
-    "chai-passport-strategy": "^1.0.1"
+    "chai-passport-strategy": "3.x.x"
   },
   "scripts": {
     "test": "node_modules/.bin/mocha test/*.test.js"
