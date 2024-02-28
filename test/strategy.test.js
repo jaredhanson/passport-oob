@@ -191,6 +191,33 @@ describe('Strategy', function() {
       .authenticate();
   });
   
+  it('should transmit code to address', function(done) {
+    chai.passport.use(new Strategy({ verifyURL: '/verify' }, function(address, code, cb) {
+    }, function(address, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      return cb(null);
+    }))
+      .request(function(req) {
+        req.body = {
+          address: '+1-201-555-0123'
+        };
+        
+        req.pushState = function(state, url, cb) {
+          req._stateStack = [ state ];
+          cb(null, 'pO27TzEq');
+        };
+      })
+      .redirect(function(url, status) {
+        expect(url).to.equal('/verify?state=pO27TzEq');
+        expect(this._stateStack[0]).to.deep.equal({
+          address: '+1-201-555-0123'
+        });
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
   
   /*
   describe('handling an approved request with credentials in body', function() {
