@@ -211,7 +211,8 @@ describe('Strategy', function() {
       .redirect(function(url, status) {
         expect(url).to.equal('/verify?state=pO27TzEq');
         expect(this._stateStack[0]).to.deep.equal({
-          address: '+1-201-555-0123'
+          address: '+1-201-555-0123',
+          transport: undefined
         });
         done();
       })
@@ -240,7 +241,8 @@ describe('Strategy', function() {
       .redirect(function(url, status) {
         expect(url).to.equal('/verify?state=pO27TzEq');
         expect(this._stateStack[0]).to.deep.equal({
-          address: '+1-201-555-0123'
+          address: '+1-201-555-0123',
+          transport: 'sms'
         });
         done();
       })
@@ -268,7 +270,8 @@ describe('Strategy', function() {
       .redirect(function(url, status) {
         expect(url).to.equal('/verify?state=pO27TzEq');
         expect(this._stateStack[0]).to.deep.equal({
-          address: '+1-201-555-0123'
+          address: '+1-201-555-0123',
+          transport: undefined
         });
         done();
       })
@@ -298,7 +301,8 @@ describe('Strategy', function() {
       .redirect(function(url, status) {
         expect(url).to.equal('/verify?state=pO27TzEq');
         expect(this._stateStack[0]).to.deep.equal({
-          address: '+1-201-555-0123'
+          address: '+1-201-555-0123',
+          transport: 'sms'
         });
         done();
       })
