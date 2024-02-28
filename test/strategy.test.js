@@ -39,8 +39,10 @@ describe('Strategy', function() {
     }))
       .request(function(req) {
         req.body = {
-          address: '+1-201-555-0123',
           code: '123456'
+        };
+        req.state = {
+          address: '+1-201-555-0123'
         };
       })
       .success(function(user, info) {
