@@ -54,6 +54,62 @@ describe('Strategy', function() {
       .authenticate();
   });
   
+  it('should verify address, transport, and code', function(done) {
+    chai.passport.use(new Strategy(function(address, transport, code, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      expect(transport).to.equal('sms');
+      expect(code).to.equal('123456');
+      return cb(null, { id: '248289761001' });
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '123456'
+        };
+        req.state = {
+          address: '+1-201-555-0123',
+          transport: 'sms'
+        };
+      })
+      .success(function(user, info) {
+        expect(user).to.deep.equal({ id: '248289761001' });
+        expect(info).to.be.undefined;
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
+  it('should verify address, transport, context, and code', function(done) {
+    chai.passport.use(new Strategy(function(address, transport, ctx, code, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      expect(transport).to.equal('sms');
+      expect(ctx).to.deep.equal({
+        address: '+1-201-555-0123',
+        transport: 'sms',
+        type: 'tel'
+      });
+      expect(code).to.equal('123456');
+      return cb(null, { id: '248289761001' });
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '123456'
+        };
+        req.state = {
+          address: '+1-201-555-0123',
+          transport: 'sms',
+          type: 'tel'
+        };
+      })
+      .success(function(user, info) {
+        expect(user).to.deep.equal({ id: '248289761001' });
+        expect(info).to.be.undefined;
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
   /*
   describe('handling an approved request with credentials in body', function() {
     var gateway = new Gateway();
