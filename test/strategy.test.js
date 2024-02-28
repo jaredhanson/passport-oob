@@ -162,6 +162,7 @@ describe('Strategy', function() {
   
   it('should verify request, address, transport, context, and code', function(done) {
     chai.passport.use(new Strategy({ passReqToCallback: true }, function(req, address, transport, ctx, code, cb) {
+      expect(req.constructor.name).to.equal('Request');
       expect(address).to.equal('+1-201-555-0123');
       expect(transport).to.equal('sms');
       expect(ctx).to.deep.equal({
@@ -200,6 +201,93 @@ describe('Strategy', function() {
       .request(function(req) {
         req.body = {
           address: '+1-201-555-0123'
+        };
+        
+        req.pushState = function(state, url, cb) {
+          req._stateStack = [ state ];
+          cb(null, 'pO27TzEq');
+        };
+      })
+      .redirect(function(url, status) {
+        expect(url).to.equal('/verify?state=pO27TzEq');
+        expect(this._stateStack[0]).to.deep.equal({
+          address: '+1-201-555-0123'
+        });
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
+  it('should transmit code to address and transport', function(done) {
+    chai.passport.use(new Strategy({ verifyURL: '/verify' }, function(address, code, cb) {
+    }, function(address, transport, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      expect(transport).to.equal('sms');
+      return cb(null);
+    }))
+      .request(function(req) {
+        req.body = {
+          address: '+1-201-555-0123',
+          transport: 'sms'
+        };
+        
+        req.pushState = function(state, url, cb) {
+          req._stateStack = [ state ];
+          cb(null, 'pO27TzEq');
+        };
+      })
+      .redirect(function(url, status) {
+        expect(url).to.equal('/verify?state=pO27TzEq');
+        expect(this._stateStack[0]).to.deep.equal({
+          address: '+1-201-555-0123'
+        });
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
+  it('should transmit code to request and address', function(done) {
+    chai.passport.use(new Strategy({ verifyURL: '/verify', passReqToCallback: true }, function(req, address, code, cb) {
+    }, function(req, address, cb) {
+      expect(req.constructor.name).to.equal('Request');
+      expect(address).to.equal('+1-201-555-0123');
+      return cb(null);
+    }))
+      .request(function(req) {
+        req.body = {
+          address: '+1-201-555-0123'
+        };
+        
+        req.pushState = function(state, url, cb) {
+          req._stateStack = [ state ];
+          cb(null, 'pO27TzEq');
+        };
+      })
+      .redirect(function(url, status) {
+        expect(url).to.equal('/verify?state=pO27TzEq');
+        expect(this._stateStack[0]).to.deep.equal({
+          address: '+1-201-555-0123'
+        });
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
+  it('should transmit code to request, address, and transport', function(done) {
+    chai.passport.use(new Strategy({ verifyURL: '/verify', passReqToCallback: true }, function(req, address, code, cb) {
+    }, function(req, address, transport, cb) {
+      expect(req.constructor.name).to.equal('Request');
+      expect(address).to.equal('+1-201-555-0123');
+      expect(transport).to.equal('sms');
+      return cb(null);
+    }))
+      .request(function(req) {
+        req.body = {
+          address: '+1-201-555-0123',
+          transport: 'sms'
         };
         
         req.pushState = function(state, url, cb) {
