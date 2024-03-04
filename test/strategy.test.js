@@ -42,7 +42,8 @@ describe('Strategy', function() {
           code: '123456'
         };
         req.state = {
-          address: '+1-201-555-0123'
+          address: '+1-201-555-0123',
+          secret: '123456'
         };
       })
       .success(function(user, info) {
@@ -67,7 +68,8 @@ describe('Strategy', function() {
         };
         req.state = {
           address: '+1-201-555-0123',
-          transport: 'sms'
+          transport: 'sms',
+          secret: '123456'
         };
       })
       .success(function(user, info) {
@@ -86,7 +88,8 @@ describe('Strategy', function() {
       expect(ctx).to.deep.equal({
         address: '+1-201-555-0123',
         transport: 'sms',
-        type: 'tel'
+        type: 'tel',
+        secret: '123456'
       });
       expect(code).to.equal('123456');
       return cb(null, { id: '248289761001' });
@@ -98,7 +101,8 @@ describe('Strategy', function() {
         req.state = {
           address: '+1-201-555-0123',
           transport: 'sms',
-          type: 'tel'
+          type: 'tel',
+          secret: '123456'
         };
       })
       .success(function(user, info) {
@@ -122,7 +126,8 @@ describe('Strategy', function() {
           code: '123456'
         };
         req.state = {
-          address: '+1-201-555-0123'
+          address: '+1-201-555-0123',
+          secret: '123456'
         };
       })
       .success(function(user, info) {
@@ -148,7 +153,8 @@ describe('Strategy', function() {
         };
         req.state = {
           address: '+1-201-555-0123',
-          transport: 'sms'
+          transport: 'sms',
+          secret: '123456'
         };
       })
       .success(function(user, info) {
@@ -168,7 +174,8 @@ describe('Strategy', function() {
       expect(ctx).to.deep.equal({
         address: '+1-201-555-0123',
         transport: 'sms',
-        type: 'tel'
+        type: 'tel',
+        secret: '123456'
       });
       expect(code).to.equal('123456');
       return cb(null, { id: '248289761001' });
@@ -180,7 +187,8 @@ describe('Strategy', function() {
         req.state = {
           address: '+1-201-555-0123',
           transport: 'sms',
-          type: 'tel'
+          type: 'tel',
+          secret: '123456'
         };
       })
       .success(function(user, info) {
