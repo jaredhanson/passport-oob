@@ -6,11 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
-- Added `transmit` callback which is invoked for an unauthenticated request and
-initiates out-of-band authentication by transmitting a code to an address.
-
 ### Changed
 
 - `Strategy` now verifies an `address` and `code`, rather than a `ticket`.  This
