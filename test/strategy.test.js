@@ -6,30 +6,16 @@ var Strategy = require('../lib/strategy');
 
 describe('Strategy', function() {
   
-  /*
   it('should be named oob', function() {
-    var strategy = new Strategy(new Gateway(), function(){});
+    var strategy = new Strategy(function(){});
     expect(strategy.name).to.equal('oob');
   });
   
-  it('should throw if constructed with no arguments', function() {
+  it('should throw if constructed without a verify function', function() {
     expect(function() {
-      var s = new Strategy();
-    }).to.throw(TypeError, 'OOBStrategy requires a gateway');
+      new Strategy();
+    }).to.throw(TypeError, 'OOBStrategy requires a verify function');
   });
-  
-  it('should throw if constructed without a gateway', function() {
-    expect(function() {
-      var s = new Strategy(function(){});
-    }).to.throw(TypeError, 'OOBStrategy requires a gateway');
-  });
-  
-  it('should throw if constructed without a fetch callback', function() {
-    expect(function() {
-      var s = new Strategy(new Gateway());
-    }).to.throw(TypeError, 'OOBStrategy requires a fetch callback');
-  });
-  */
   
   it('should verify address', function(done) {
     chai.passport.use(new Strategy(function(address, cb) {
