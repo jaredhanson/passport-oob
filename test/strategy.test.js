@@ -258,6 +258,25 @@ describe('Strategy', function() {
       .authenticate();
   });
   
+  it('should fail when state is missing', function(done) {
+    chai.passport.use(new Strategy(function(address, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      return cb(null, { id: '248289761001' });
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '123456'
+        };
+      })
+      .fail(function(challenge, status) {
+        expect(challenge).to.deep.equal({ message: 'Unable to verify one-time code.' });
+        expect(status).to.equal(403);
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
   
   /*
   describe('handling an approved request with credentials in body', function() {
