@@ -193,6 +193,28 @@ describe('Strategy', function() {
       .authenticate();
   });
   
+  it('should fail when verify function yields false', function(done) {
+    chai.passport.use(new Strategy(function(address, cb) {
+      return cb(null, false, { message: 'Address not allowed.' });
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '123456'
+        };
+        req.state = {
+          address: '+1-201-555-0123',
+          secret: '123456'
+        };
+      })
+      .fail(function(challenge, status) {
+        expect(challenge).to.deep.equal({ message: 'Address not allowed.' });
+        expect(status).to.be.undefined;
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
   it('should fail when missing credential', function(done) {
     chai.passport.use(new Strategy(function(address, cb) {
       expect(address).to.equal('+1-201-555-0123');
@@ -274,6 +296,48 @@ describe('Strategy', function() {
         done();
       })
       .error(done)
+      .authenticate();
+  });
+  
+  it('should error when verify function calls callback with an error', function(done) {
+    chai.passport.use(new Strategy(function(address, cb) {
+      return cb(new Error('something went wrong'));
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '123456'
+        };
+        req.state = {
+          address: '+1-201-555-0123',
+          secret: '123456'
+        };
+      })
+      .error(function(err) {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('something went wrong');
+        done();
+      })
+      .authenticate();
+  });
+  
+  it('should error when verify function throws an error', function(done) {
+    chai.passport.use(new Strategy(function(address, cb) {
+      throw new Error('something went wrong');
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '123456'
+        };
+        req.state = {
+          address: '+1-201-555-0123',
+          secret: '123456'
+        };
+      })
+      .error(function(err) {
+        expect(err).to.be.an.instanceof(Error);
+        expect(err.message).to.equal('something went wrong');
+        done();
+      })
       .authenticate();
   });
   
