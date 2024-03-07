@@ -31,8 +31,7 @@
   ],
   "main": "./lib",
   "dependencies": {
-    "passport-strategy": "1.x.x",
-    "utils-merge": "^1.0.1"
+    "passport-strategy": "1.x.x"
   },
   "devDependencies": {
     "chai": "^3.0.0",
