@@ -170,6 +170,94 @@ describe('Strategy', function() {
       .authenticate();
   });
   
+  it('should fail when credential is invalid', function(done) {
+    chai.passport.use(new Strategy(function(address, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      return cb(null, { id: '248289761001' });
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '000000'
+        };
+        req.state = {
+          address: '+1-201-555-0123',
+          secret: '123456'
+        };
+      })
+      .fail(function(challenge, status) {
+        expect(challenge).to.deep.equal({ message: 'Incorrect one-time code.' });
+        expect(status).to.be.undefined;
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
+  it('should fail when missing credential', function(done) {
+    chai.passport.use(new Strategy(function(address, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      return cb(null, { id: '248289761001' });
+    }))
+      .request(function(req) {
+        req.body = {};
+        req.state = {
+          address: '+1-201-555-0123',
+          secret: '123456'
+        };
+      })
+      .fail(function(challenge, status) {
+        expect(challenge).to.deep.equal({ message: 'Missing one-time code.' });
+        expect(status).to.equal(400);
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
+  it('should fail when state is missing an address', function(done) {
+    chai.passport.use(new Strategy(function(address, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      return cb(null, { id: '248289761001' });
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '123456'
+        };
+        req.state = {
+          secret: '123456'
+        };
+      })
+      .fail(function(challenge, status) {
+        expect(challenge).to.deep.equal({ message: 'Invalid out-of-band authentication request state.' });
+        expect(status).to.equal(403);
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
+  it('should fail when state is missing a secret', function(done) {
+    chai.passport.use(new Strategy(function(address, cb) {
+      expect(address).to.equal('+1-201-555-0123');
+      return cb(null, { id: '248289761001' });
+    }))
+      .request(function(req) {
+        req.body = {
+          code: '123456'
+        };
+        req.state = {
+          address: '+1-201-555-0123'
+        };
+      })
+      .fail(function(challenge, status) {
+        expect(challenge).to.deep.equal({ message: 'Invalid out-of-band authentication request state.' });
+        expect(status).to.equal(403);
+        done();
+      })
+      .error(done)
+      .authenticate();
+  });
+  
   
   /*
   describe('handling an approved request with credentials in body', function() {
