@@ -106,11 +106,10 @@ describe('Strategy', function() {
       .authenticate();
   });
   
-  it.skip('should verify request, address, and code', function(done) {
-    chai.passport.use(new Strategy({ passReqToCallback: true }, function(req, address, code, cb) {
+  it('should verify request and address', function(done) {
+    chai.passport.use(new Strategy({ passReqToCallback: true }, function(req, address, cb) {
       expect(req.constructor.name).to.equal('Request');
       expect(address).to.equal('+1-201-555-0123');
-      expect(code).to.equal('123456');
       return cb(null, { id: '248289761001' });
     }))
       .request(function(req) {
@@ -131,12 +130,11 @@ describe('Strategy', function() {
       .authenticate();
   });
   
-  it.skip('should verify request, address, transport, and code', function(done) {
-    chai.passport.use(new Strategy({ passReqToCallback: true }, function(req, address, transport, code, cb) {
+  it('should verify request, address, and channel', function(done) {
+    chai.passport.use(new Strategy({ passReqToCallback: true }, function(req, address, channel, cb) {
       expect(req.constructor.name).to.equal('Request');
       expect(address).to.equal('+1-201-555-0123');
-      expect(transport).to.equal('sms');
-      expect(code).to.equal('123456');
+      expect(channel).to.equal('tel');
       return cb(null, { id: '248289761001' });
     }))
       .request(function(req) {
@@ -145,7 +143,7 @@ describe('Strategy', function() {
         };
         req.state = {
           address: '+1-201-555-0123',
-          transport: 'sms',
+          channel: 'tel',
           secret: '123456'
         };
       })
@@ -158,18 +156,12 @@ describe('Strategy', function() {
       .authenticate();
   });
   
-  it.skip('should verify request, address, transport, context, and code', function(done) {
-    chai.passport.use(new Strategy({ passReqToCallback: true }, function(req, address, transport, ctx, code, cb) {
+  it('should verify request, address, transport, and channel', function(done) {
+    chai.passport.use(new Strategy({ passReqToCallback: true }, function(req, address, transport, channel, cb) {
       expect(req.constructor.name).to.equal('Request');
       expect(address).to.equal('+1-201-555-0123');
       expect(transport).to.equal('sms');
-      expect(ctx).to.deep.equal({
-        address: '+1-201-555-0123',
-        transport: 'sms',
-        type: 'tel',
-        secret: '123456'
-      });
-      expect(code).to.equal('123456');
+      expect(channel).to.equal('tel');
       return cb(null, { id: '248289761001' });
     }))
       .request(function(req) {
@@ -179,7 +171,7 @@ describe('Strategy', function() {
         req.state = {
           address: '+1-201-555-0123',
           transport: 'sms',
-          type: 'tel',
+          channel: 'tel',
           secret: '123456'
         };
       })
